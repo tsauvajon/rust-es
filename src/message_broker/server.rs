@@ -97,7 +97,7 @@ async fn process_consume(stream: TcpStream, queue: Queue) -> Result<(), std::io:
                     Some(val) => {
                         wr.write_all(b"+").await?; // there is a message: '+'
                         wr.write_all(&val.to_vec()[..]).await?;
-                    },
+                    }
                     None => wr.write_all(b"-").await?, // there is no message: '-'
                 };
 

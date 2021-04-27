@@ -31,7 +31,7 @@ pub async fn consume_one(stream: &mut TcpStream) -> Result<Option<bytes::Bytes>,
                     } else if buf[0] == b"-"[0] {
                         return Ok(None);
                     } else {
-                        return Err(ConsumeError::ProtocolError)
+                        return Err(ConsumeError::ProtocolError);
                     }
                 }
 
