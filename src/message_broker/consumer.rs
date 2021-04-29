@@ -4,12 +4,12 @@ use tokio::net::TcpStream;
 #[derive(Debug)]
 pub enum ConsumeError {
     ProtocolError,
-    IOError(std::io::Error),
+    IoError(std::io::Error),
 }
 
 impl From<std::io::Error> for ConsumeError {
     fn from(err: std::io::Error) -> ConsumeError {
-        ConsumeError::IOError(err)
+        ConsumeError::IoError(err)
     }
 }
 
@@ -37,7 +37,7 @@ pub async fn consume_one(stream: &mut TcpStream) -> Result<Option<bytes::Bytes>,
 
                 value.append(&mut buf[..n].to_vec());
             }
-            Err(err) => return Err(ConsumeError::IOError(err)),
+            Err(err) => return Err(ConsumeError::IoError(err)),
         };
     }
 }

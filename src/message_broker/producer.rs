@@ -4,12 +4,12 @@ use tokio::net::TcpStream;
 #[derive(Debug)]
 pub enum ProduceError {
     ConnectionDroppedByServer,
-    IOError(std::io::Error),
+    IoError(std::io::Error),
 }
 
 impl From<std::io::Error> for ProduceError {
     fn from(err: std::io::Error) -> ProduceError {
-        ProduceError::IOError(err)
+        ProduceError::IoError(err)
     }
 }
 
@@ -34,7 +34,7 @@ pub async fn produce_one(stream: &mut TcpStream, msg: Vec<u8>) -> Result<(), Pro
 
                 value.append(&mut buf[..n].to_vec());
             }
-            Err(err) => return Err(ProduceError::IOError(err)),
+            Err(err) => return Err(ProduceError::IoError(err)),
         };
     }
 }

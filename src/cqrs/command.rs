@@ -42,7 +42,9 @@ impl Command<aggregate::Balance, event::BalanceEvent> for MakeClearance {
         self,
         balance: &aggregate::Balance,
     ) -> Result<Vec<event::BalanceEvent>, aggregate::Error> {
-        if balance.amount - self.amount < 0_f64 {
+        let new_balance = balance.amount - self.amount;
+
+        if new_balance < 0_f64 {
             return Err(aggregate::Error::UserError(
                 "insufficient funds".to_string(),
             ));
@@ -57,7 +59,7 @@ impl Command<aggregate::Balance, event::BalanceEvent> for MakeClearance {
             event::ClearanceSentToDriver {
                 amount: self.amount,
                 driver_id: self.driver_id,
-                balance: balance.amount - self.amount,
+                balance: new_balance,
             },
         )])
     }

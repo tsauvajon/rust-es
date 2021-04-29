@@ -36,7 +36,7 @@ mod aggregate_tests {
     use crate::cqrs::testing::TestFramework;
     use crate::cqrs::{command, event};
 
-    type AccountTestFramework = TestFramework<Balance, event::BalanceEvent>;
+    type BalanceTests = TestFramework<Balance, event::BalanceEvent>;
 
     #[test]
     fn test_make_payment() {
@@ -48,7 +48,7 @@ mod aggregate_tests {
             balance: 12.34_f64,
         });
 
-        AccountTestFramework::default()
+        BalanceTests::default()
             .given_no_previous_events()
             .when(command::MakePayment {
                 amount: 12.34,
@@ -64,9 +64,45 @@ mod aggregate_tests {
         let previous = event::BalanceEvent::DriverMadePayment(event::DriverMadePayment { driver_id:id, amount: 100.0, balance: 100.0 });
         let expected = event::BalanceEvent::DriverMadePayment(event::DriverMadePayment { driver_id:id, amount: 200.0, balance: 300.0 });
 
-        AccountTestFramework::default()
+        BalanceTests::default()
             .given(vec![previous])
             .when(command::MakePayment{ amount: 200.0, driver_id: id })
             .then_expect_events(vec![expected]);
+    }
+
+    #[test]
+    fn test_make_clearance() {
+        let id = Uuid::new_v4();
+
+        let previous = event::BalanceEvent::DriverMadePayment(event::DriverMadePayment { driver_id:id, amount: 100.0, balance: 100.0 });
+
+        let expected = event::BalanceEvent::ClearanceSentToDriver(event::ClearanceSentToDriver {
+            amount: 40_f64,
+            driver_id: id,
+            balance: 60_f64,
+        });
+
+        BalanceTests::default()
+            .given(vec![previous])
+            .when(command::MakeClearance {
+                amount: 40_f64,
+                driver_id: id,
+            })
+            .then_expect_events(vec![expected]);
+    }
+
+    #[test]
+    fn test_make_clearance_insufficient_balance() {
+        let id = Uuid::new_v4();
+
+        let previous = event::BalanceEvent::DriverMadePayment(event::DriverMadePayment { driver_id:id, amount: 100.0, balance: 100.0 });
+
+        BalanceTests::default()
+            .given(vec![previous])
+            .when(command::MakeClearance {
+                amount: 400_f64,
+                driver_id: id,
+            })
+            .then_expect_error("insufficient funds")
     }
 }

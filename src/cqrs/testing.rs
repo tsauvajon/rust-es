@@ -106,7 +106,7 @@ where
                     panic!("expected user error but found technical error: {}", err)
                 }
                 aggregate::Error::UserError(err) => {
-                    assert_eq!(err.to_string(), error_message.to_string());
+                    assert_eq!(err, error_message.to_string());
                 }
             },
         };
