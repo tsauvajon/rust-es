@@ -1,4 +1,4 @@
-use crate::cqrs::{aggregate, command, event};
+use crate::{aggregate, command, event};
 use std::marker::PhantomData;
 
 pub struct TestFramework<A, E> {

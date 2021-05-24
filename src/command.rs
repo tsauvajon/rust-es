@@ -1,5 +1,5 @@
-use crate::cqrs::aggregate;
-use crate::cqrs::event;
+use crate::aggregate;
+use crate::event;
 
 use uuid::Uuid;
 

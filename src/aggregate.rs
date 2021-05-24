@@ -33,8 +33,8 @@ impl Aggregate for Balance {}
 #[cfg(test)]
 mod aggregate_tests {
     use super::*;
-    use crate::cqrs::testing::TestFramework;
-    use crate::cqrs::{command, event};
+    use crate::testing::TestFramework;
+    use crate::{command, event};
 
     type BalanceTests = TestFramework<Balance, event::BalanceEvent>;
 

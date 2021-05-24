@@ -1,4 +1,4 @@
-use crate::cqrs::aggregate;
+use crate::aggregate;
 
 use uuid::Uuid;
 
